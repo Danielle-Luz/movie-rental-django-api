@@ -19,3 +19,14 @@ class Movie(models.Model):
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="movies"
     )
+
+
+class MovieOrder(models.Model):
+    price = models.DecimalField(decimal_places=2, max_digits=8)
+    buyed_at = models.DateTimeField(auto_now_add=True)
+    buyed_movie = models.ForeignKey(
+        "movies.Movie", on_delete=models.CASCADE, related_name="movie_orders"
+    )
+    buyed_by = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="movie_orders"
+    )

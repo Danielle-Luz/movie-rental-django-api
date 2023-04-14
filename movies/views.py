@@ -4,9 +4,10 @@ from rest_framework import status
 from .models import Movie
 from .utils import get_movie_with_added_by
 from users.models import User
-from .serializers import MovieSerializer
+from .serializers import MovieSerializer, MovieOrderSerializer
 from .permissions import EmployeePermission
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class MovieView(APIView):
@@ -20,7 +21,7 @@ class MovieView(APIView):
 
     def post(self, request):
         validated_movie = MovieSerializer(data=request.data)
-        
+
         try:
             validated_movie.is_valid()
 
@@ -31,7 +32,6 @@ class MovieView(APIView):
             return Response(movie_with_added_by, status.HTTP_201_CREATED)
         except:
             return Response(validated_movie.errors, status.HTTP_400_BAD_REQUEST)
-        
 
 
 class MovieInfoView(APIView):
@@ -61,3 +61,20 @@ class MovieInfoView(APIView):
             return Response(
                 {"error": "movie not found"}, status=status.HTTP_404_NOT_FOUND
             )
+
+
+class MovieOrderView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, movie_id):
+        validated_order = MovieOrderSerializer(data=request.data)
+
+        validated_order.is_valid()
+
+        validated_order.validated_data["buyer_id"] = request.user.id
+        validated_order.validated_data["movie_id"] = movie_id
+
+        created_order = validated_order.save()
+
+        return Response(created_order, status.HTTP_201_CREATED)

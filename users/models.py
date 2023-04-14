@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from movies.models import Movie
 
 
 class User(AbstractUser):
@@ -8,3 +9,6 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50)
     birthdate = models.DateField(null=True)
     is_employee = models.BooleanField(null=True, default=False)
+    bought_movies = models.ManyToManyField(
+        Movie, through="movies.MovieOrder", related_name="buyers"
+    )
