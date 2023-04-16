@@ -43,3 +43,16 @@ class UserSerializer(serializers.Serializer):
         )
 
         return created_user
+    
+    def update(self, actual_user: User, new_user_info: dict):
+        updated_fields = new_user_info.keys()
+
+        for field in updated_fields:
+            if(field != "password"):
+                setattr(actual_user, field, new_user_info[field])
+            else:
+                actual_user.set_password(new_user_info["password"])
+                
+        actual_user.save()
+
+        return actual_user

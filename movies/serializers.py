@@ -28,13 +28,13 @@ class MovieOrderSerializer(serializers.Serializer):
     buyed_by = serializers.SerializerMethodField(read_only=True)
 
     def get_title(self, obj):
-        buyed_movie = Movie.objects.get(obj.buyed_movie.id)
+        buyed_movie = Movie.objects.get(id=obj.buyed_movie.id)
         movie_title = buyed_movie.title
 
         return movie_title
 
     def get_buyed_by(self, obj):
-        buyed_by = User.objects.get(obj.buyed_by.id)
+        buyed_by = User.objects.get(id=obj.buyed_by.id)
         buyer_email = buyed_by.email
 
         return buyer_email

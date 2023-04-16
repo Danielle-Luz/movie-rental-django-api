@@ -8,16 +8,20 @@ from .serializers import MovieSerializer, MovieOrderSerializer
 from .permissions import EmployeePermission
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 
 
-class MovieView(APIView):
+class MovieView(APIView, PageNumberPagination):
     authentication_classes = [JWTAuthentication]
     permission_classes = [EmployeePermission]
 
     def get(self, request):
-        all_movies = [get_movie_with_added_by(movie) for movie in Movie.objects.all()]
+        all_movies = Movie.objects.all().order_by("id")
+        movies_in_page = self.paginate_queryset(all_movies, request, view=self)
 
-        return Response(all_movies)
+        movies_with_added_by = [get_movie_with_added_by(movie) for movie in movies_in_page]
+
+        return self.get_paginated_response(movies_with_added_by)
 
     def post(self, request):
         validated_movie = MovieSerializer(data=request.data)
@@ -69,12 +73,16 @@ class MovieOrderView(APIView):
 
     def post(self, request, movie_id):
         validated_order = MovieOrderSerializer(data=request.data)
+        try:
+            validated_order.is_valid()
 
-        validated_order.is_valid()
+            validated_order.validated_data["buyer_id"] = request.user.id
+            validated_order.validated_data["movie_id"] = movie_id
 
-        validated_order.validated_data["buyer_id"] = request.user.id
-        validated_order.validated_data["movie_id"] = movie_id
+            created_order = validated_order.save()
 
-        created_order = validated_order.save()
+            serialized_order = MovieOrderSerializer(created_order)
 
-        return Response(created_order, status.HTTP_201_CREATED)
+            return Response(serialized_order.data, status.HTTP_201_CREATED)
+        except:
+            return Response(validated_order.errors, status.HTTP_400_BAD_REQUEST)
