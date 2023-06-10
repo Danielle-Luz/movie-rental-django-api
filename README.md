@@ -1,77 +1,78 @@
-# M5 - Kenzie Buster
+<h1 align="center">Movie Rental Django API</h1>
 
-## Instalação dos pacotes de teste
+<p align="center">
+    <img alt="Badge indicando que o projeto foi criado em abril de 2023" src="https://img.shields.io/badge/Data%20de%20cria%C3%A7%C3%A3o-Abril%2F2023-blue">
+    <img alt="Badge indicando que o status do projeto é 'concluído'" src="https://img.shields.io/badge/Status-Concluído-yellow">
+</p>
 
-- Verifique se os pacotes `pytest` e/ou `pytest-testdox` estão instalados globalmente em seu sistema:
-```shell
-pip list
-```
-- Caso seja listado o `pytest` e/ou `pytest-testdox` e/ou `pytest-django` em seu ambiente global, utilize os seguintes comando para desinstalá-los globalmente:
-```shell
-pip uninstall pytest
-```
+## Índice
 
-```shell
-pip uninstall pytest-testdox
-```
-
-```shell
-pip uninstall pytest-django
-```
-
-A partir disso, prossiga com os passos:
-
-1. Crie seu ambiente virtual:
-```bash
-python -m venv venv
-```
-
-2. Ative seu venv:
-```bash
-# linux:
-source venv/bin/activate
-
-# windows:
-.\venv\Scripts\activate
-
-# git bash:
-source venv/Scripts/activate
-```
-
-3. Instale o pacote `pytest-testdox`:
-```shell
-pip install pytest-testdox pytest-django
-```
-
-5. Vá até o arquivo `pytest.ini` e modifique o nome do projeto `my_project_name.settings` para o nome do **seu_projeto**.settings (onde se encontra o settings.py)
-
-4. Agora é só rodar os testes no diretório principal do projeto:
-```shell
-pytest --testdox -vvs
-```
+• <a href="#descricao">Descrição</a>
+<br>
+• <a href="#tecnologias">Tecnologias</a>
+<br>
+• <a href="#funcionalidades">Funcionalidades</a>
+<br>
+• <a href="#endpoints">Rotas do serviço</a>
+<br>
+• <a href="#Desenvolvedora">Desenvolvedora</a>
+<br>
+<p align="center">
+</p>
 
 
+<h2 id="descricao">Descrição</h2>
+API feita com Django, capaz de gerenciar usuários, filmes e compras, incluindo serialização de dados, autenticação e permissões de rotas para diferentes tipos de usuário.
 
-## Rodando os testes de cada tarefa isoladamente
+<h2 id="tecnologias">Tecnologias</h2>
 
-Ao fim de cada tarefa será possível executar uma suite de testes direcionada àquela tarefa específica. Lembre-se de sempre estar com o **virtual enviroment (venv) ativado**.
+- Python
+- Django
+- PostgreSQL
 
-- Rodando testes da Tarefa 1:
-```python
-pytest --testdox -vvs tests/tarefas/t1/
-```
+<h2 id="funcionalidades">Funcionalidades</h2>
 
-- Rodando testes da Tarefa 2:
-```python
-pytest --testdox -vvs tests/tarefas/t2/
-```
+- Usuário customizado com base no AbstractUser;
+- Validação de dados customizada com serializers;
+- Proteção de rotas via autenticação JWT e permissão customizada do Django Rest Framework;
+- Tabela pivô customizada;
+- Paginação com APIView;
 
-- Rodando testes da Tarefa 3:
-```python
-pytest --testdox -vvs tests/tarefas/t3/
-```
+<h2 id="endpoints">Rotas do serviço</h2>
 
-- Rodando testes da Tarefa 4:
-```python
-pytest --testdox -vvs tests/tarefas/t4/
-```
+### Users
+| Método   | Rota             | Permissão      | Responsabilidade |
+| -------- | -------------------- | --------------------- | -------- |
+| POST     | /api/users/            | Livre para acesso        | Criar um novo usuário |
+| GET    | api/users/<int:user_id>/   | Somente autenticado                             | Mostrar os dados de um usuário com o ID indicado |
+| PATCH  | api/users/<int:user_id>/   | Somente autenticado e dono da conta ou admin     |  Atualizar os dados do usuário com o ID indicado |
+
+
+### Movies
+| Método | Rota                      | Permissão           | Responsabilidade |
+| ------ | ------------------------- | ------------------- | ---------------- |
+| GET    | api/movies/               | Livre para acesso   | Listar todos os filmes |
+| POST   | api/movies/               | Somente employee    | Cadastrar um novo filme |
+| GET    | api/movies/<int:movie_id>/| Livre para acesso   | Mostrar o filme com o ID indicado |
+| DELETE | api/movies/<int:movie_id>/| Somente employee    | Excluir o filme com o ID indicado |
+
+### Orders
+| Método | Rota                      | Permissão           | Responsabilidade |
+| ------ | ------------------------- | ------------------- | ---------------- |
+| POST   | api/movies/<int:movie_id>/orders/  | Somente autenticado  | Criar um novo pedido |
+
+<h2 id="Desenvolvedora">Desenvolvedora</h2>
+
+<p align="center">
+  <a href="https://github.com/Danielle-Luz">
+    <img width="120px" src="https://avatars.githubusercontent.com/u/99164019?v=4" alt="foto de uma mulher parda com o cabelo castanho, sorrindo levemente na frente de um fundo verde com bits">
+  </a>
+</p>
+
+<p align="center">
+Danielle da Luz Nascimento
+</p>
+
+<p align="center">
+<a href="https://www.linkedin.com/in/danielle-da-luz-nascimento/">@Linkedin</a>
+</p>
